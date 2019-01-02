@@ -1,0 +1,1 @@
+# Euler 50 Problems in Go
