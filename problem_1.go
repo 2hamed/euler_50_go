@@ -3,10 +3,10 @@ package main
 import "fmt"
 
 func main() {
-	var sum int64
+	var sum int
 
-	for i := int64(1000); i > 2; i-- {
-		if i%3 == 0 || i%5 == 3 {
+	for i := 0; i < 1000; i++ {
+		if i%3 == 0 || i%5 == 0 {
 			sum += i
 		}
 	}
