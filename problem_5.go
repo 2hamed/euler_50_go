@@ -9,7 +9,7 @@ func main() {
 				goto cont
 			}
 		}
-		fmt.Println(i)
+		fmt.Println("Product: ", i)
 		return
 	cont:
 		{
