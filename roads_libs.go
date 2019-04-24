@@ -7,7 +7,7 @@ import (
 // Complete the roadsAndLibraries function below.
 func roadsAndLibraries(n int32, c_lib int32, c_road int32, cities [][]int32) int64 {
 	if c_lib <= c_road {
-		return int64(c_lib * n)
+		return int64(c_lib) * int64(n)
 	}
 	adj := make(map[int32][]int32)
 	for _, c := range cities {
@@ -22,8 +22,6 @@ func roadsAndLibraries(n int32, c_lib int32, c_road int32, cities [][]int32) int
 		adj[c[1]] = append(adj[c[1]], c[0])
 	}
 
-	// fmt.Println("Matrix:", adj)
-
 	visited := make(map[int32]bool)
 
 	for i := int32(1); i <= n; i++ {
@@ -34,7 +32,6 @@ outer:
 	for {
 		for k, v := range visited {
 			if !v {
-				// fmt.Println(k, "is not visited")
 				path := make([]int32, 0)
 				path = dfs(k, path, visited, adj)
 				comps = append(comps, int32(len(path)))
@@ -43,18 +40,15 @@ outer:
 		}
 		break
 	}
-	// fmt.Println(adj, visited, comps)
 	cost := int64(0)
 	for i := 0; i < len(comps); i++ {
-		cost += int64(comps[i] - 1*c_road + c_lib)
+		cost += int64(comps[i]-1)*int64(c_road) + int64(c_lib)
 	}
 	return cost
 }
 
 func dfs(cur int32, path []int32, visited map[int32]bool, adj map[int32][]int32) []int32 {
-	fmt.Println("visiting:", cur)
-	if v, ok := visited[cur]; ok && v {
-		fmt.Println("already visited!")
+	if v := visited[cur]; v {
 		return path
 	}
 
