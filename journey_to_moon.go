@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func journeyToMoon(n int32, astronaut [][]int32) int32 {
+func journeyToMoon(n int32, astronaut [][]int32) int64 {
 	adj := make(map[int32][]int32)
 
 	for _, a := range astronaut {
@@ -19,7 +19,7 @@ func journeyToMoon(n int32, astronaut [][]int32) int32 {
 
 	visited := make(map[int32]bool)
 
-	for i := n - 1; i != 0; i-- {
+	for i := n - 1; i >= 0; i-- {
 		if _, ok := adj[i]; !ok {
 			adj[i] = make([]int32, 0)
 		}
@@ -27,6 +27,7 @@ func journeyToMoon(n int32, astronaut [][]int32) int32 {
 	}
 
 	components := make(map[int32]int32)
+	cc := 0
 
 outer:
 	for {
@@ -35,19 +36,20 @@ outer:
 				path := make([]int32, 0)
 				path = dfs(k, visited, adj, path)
 				components[k] = int32(len(path))
+				cc++
 				continue outer
 			}
 		}
 		break
 	}
 
-	// fmt.Println(components)
+	// fmt.Println(cc)
 
-	var sum int32
-	var result int32
+	var sum int64
+	var result int64
 	for _, size := range components {
-		result += sum * size
-		sum += size
+		result += sum * int64(size)
+		sum += int64(size)
 	}
 
 	return result
@@ -72,7 +74,7 @@ func main() {
 		[]int32{1, 2},
 		[]int32{3, 4},
 	}
-	s := journeyToMoon(10000, a)
+	s := journeyToMoon(100000, a)
 
 	fmt.Println(s)
 }

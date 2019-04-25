@@ -13,9 +13,8 @@ func candies(n int32, arr []int32) int64 {
 	s2 := candy(n, arev)
 	if s2 < s {
 		return s2
-	} else {
-		return s
 	}
+	return s
 }
 func candy(n int32, arr []int32) int64 {
 	candiess := make([]int, 0)
