@@ -4,18 +4,22 @@ import "fmt"
 
 func bfs(n int32, m int32, edges [][]int32, start int32) []int32 {
 	adj := make([][]int32, n)
-	for i := range adj {
-		adj[i] = make([]int32, n)
-	}
 
 	for _, e := range edges {
-		adj[e[0]-1][e[1]-1] = 1
-		adj[e[1]-1][e[0]-1] = 1
+		if l := adj[e[0]-1]; l == nil {
+			adj[e[0]-1] = make([]int32, 0)
+		}
+		adj[e[0]-1] = append(adj[e[0]-1], e[1]-1)
+
+		if l := adj[e[1]-1]; l == nil {
+			adj[e[1]-1] = make([]int32, 0)
+		}
+		adj[e[1]-1] = append(adj[e[1]-1], e[0]-1)
 	}
 
-	for i, c := range adj {
-		fmt.Println(i+1, c)
-	}
+	// for i, c := range adj {
+	// fmt.Println(i+1, c)
+	// }
 
 	result := make([]int32, 0)
 
@@ -25,12 +29,14 @@ func bfs(n int32, m int32, edges [][]int32, start int32) []int32 {
 		}
 		q := make([]int32, 0)
 
-		levels := make([]int, n)
+		levels := make([]int32, n)
 		visited := make([]bool, n)
 
 		t := int32(j)
 
 		q = append(q, start-1)
+
+		levels[start-1] = 0
 
 		found := false
 		for len(q) > 0 {
@@ -41,24 +47,21 @@ func bfs(n int32, m int32, edges [][]int32, start int32) []int32 {
 				found = true
 				break
 			}
-			for i, v := range adj[s] {
-				if v == 1 {
-					if vis := visited[i]; !vis {
-						q = append(q, int32(i))
-					}
+			if adj[s] == nil {
+				continue
+			}
+			for _, v := range adj[s] {
+				if vis := visited[v]; !vis {
+					levels[v] = levels[s] + 1
+					q = append(q, v)
+					visited[v] = true
 				}
 			}
 			// fmt.Println(q)
 		}
-		f := "found"
-		if !found {
-			f = "not found"
-		}
-		fmt.Printf("from %d to %d %s in %d steps\n", start, j+1, f, count)
 
-		// fmt.Println(found, count)
 		if found {
-			result = append(result, count*6)
+			result = append(result, levels[j]*6)
 		} else {
 			result = append(result, -1)
 		}
