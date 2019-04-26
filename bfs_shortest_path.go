@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func bfs(n int32, m int32, edges [][]int32, s int32) []int32 {
+func bfs(n int32, m int32, edges [][]int32, start int32) []int32 {
 	adj := make([][]int32, n)
 	for i := range adj {
 		adj[i] = make([]int32, n)
@@ -13,58 +13,66 @@ func bfs(n int32, m int32, edges [][]int32, s int32) []int32 {
 		adj[e[1]-1][e[0]-1] = 1
 	}
 
-	for _, c := range adj {
-		fmt.Println(c)
+	for i, c := range adj {
+		fmt.Println(i+1, c)
 	}
 
-	fin := make([]int32, 0)
+	result := make([]int32, 0)
 
-	for i := int32(0); i < n; i++ {
-		if i == s-1 {
+	for j := int32(0); j < n; j++ {
+		if j == start-1 {
 			continue
 		}
-		path := make([]int32, 0)
-		path = bfSearch(s-1, i, adj, path)
-		fmt.Println(s-1, i, path)
-		if path[0] == -1 {
-			fin = append(fin, -1)
-		} else if len(path) > 2 {
-			fin = append(fin, (int32(len(path)) - 1))
+		q := make([]int32, 0)
+
+		levels := make([]int, n)
+		visited := make([]bool, n)
+
+		t := int32(j)
+
+		q = append(q, start-1)
+
+		found := false
+		for len(q) > 0 {
+			s := q[0]
+			q = q[1:]
+			visited[s] = true
+			if s == t {
+				found = true
+				break
+			}
+			for i, v := range adj[s] {
+				if v == 1 {
+					if vis := visited[i]; !vis {
+						q = append(q, int32(i))
+					}
+				}
+			}
+			// fmt.Println(q)
+		}
+		f := "found"
+		if !found {
+			f = "not found"
+		}
+		fmt.Printf("from %d to %d %s in %d steps\n", start, j+1, f, count)
+
+		// fmt.Println(found, count)
+		if found {
+			result = append(result, count*6)
 		} else {
-			fin = append(fin, int32(len(path)))
+			result = append(result, -1)
 		}
 	}
 
-	return fin
-}
-
-func bfSearch(start, end int32, adj [][]int32, path []int32) []int32 {
-	if start == end {
-		return []int32{-1}
-	}
-	for e, p := range adj[start] {
-		if int32(e) == end && p == 1 {
-			return []int32{1}
-		}
-	}
-
-	for i, v := range adj[start] {
-		if v == 1 {
-			path = append(path, bfSearch(int32(i), end, adj, path)...)
-		}
-	}
-
-	return append(path, 1)
+	return result
 }
 
 func main() {
 	edges := [][]int32{
 		[]int32{1, 2},
 		[]int32{1, 3},
-		[]int32{2, 4},
-		[]int32{4, 5},
-		[]int32{5, 6},
+		[]int32{3, 4},
 	}
 
-	fmt.Println(bfs(20, 2, edges, 10))
+	fmt.Println(bfs(5, 3, edges, 1))
 }
