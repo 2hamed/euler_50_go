@@ -8,8 +8,7 @@ func main() {
 		[]int32{1, 4, 20},
 		[]int32{3, 1, 3},
 		[]int32{4, 3, 12},
-		[]int32{3, 1, 20},
-		[]int32{1, 4, 90},
+		[]int32{4, 1, 2},
 	}
 	fmt.Println(shortestReach(4, edges, 1))
 }
@@ -34,6 +33,8 @@ func shortestReach(n int32, edges [][]int32, s int32) []int32 {
 	for _, e := range edges {
 		if v := adj[e[0]-1][e[1]-1]; v == 0 || e[2] <= v {
 			adj[e[0]-1][e[1]-1] = e[2]
+		}
+		if v := adj[e[1]-1][e[0]-1]; v == 0 || e[2] <= v {
 			adj[e[1]-1][e[0]-1] = e[2]
 		}
 	}
@@ -102,9 +103,6 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return item
 }
 
-func (pq *PriorityQueue) Empty() bool {
-	return len(*pq) != 0
-}
 func (pq *PriorityQueue) update(item *NW, node int32, weight int32) {
 	item.Node = node
 	item.Weight = weight
