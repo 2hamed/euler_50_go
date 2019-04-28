@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"container/heap"
+	"fmt"
+)
 
 func main() {
 	edges := [][]int32{
@@ -40,12 +43,12 @@ func shortestReach(n int32, edges [][]int32, s int32) []int32 {
 	}
 
 	dists[s-1] = 0
-	pq := PriorityQueue{
-		&NW{Node: s - 1, Weight: 0},
-	}
+	pq := make(PriorityQueue, 0)
+	heap.Init(&pq)
+	heap.Push(&pq, &NW{Node: s - 1, Weight: 0})
 
 	for pq.Len() != 0 {
-		p := pq.Pop().(*NW)
+		p := heap.Pop(&pq).(*NW)
 		if visited[p.Node] {
 			continue
 		}
@@ -53,7 +56,7 @@ func shortestReach(n int32, edges [][]int32, s int32) []int32 {
 		for i, w := range adj[p.Node] {
 			if w > 0 && dists[p.Node]+w < dists[i] {
 				dists[i] = dists[p.Node] + w
-				pq.Push(&NW{Node: int32(i), Weight: dists[i]})
+				heap.Push(&pq, &NW{Node: int32(i), Weight: dists[i]})
 			}
 		}
 	}
